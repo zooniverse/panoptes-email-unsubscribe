@@ -53,7 +53,7 @@ def unsub_project(subscribers, slug):
         subscribers
     )
 
-input_lines = map(lambda s: s.strip(), sys.stdin.readlines())
+input_lines = map(lambda s: s.strip().lower(), sys.stdin.readlines())
 
 unsubscriptions = {}
 
