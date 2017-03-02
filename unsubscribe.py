@@ -53,24 +53,38 @@ def unsub_project(subscribers, slug):
         subscribers
     )
 
+input_lines = map(lambda s: s.strip(), sys.stdin.readlines())
 
-list_slug = sys.argv[1].lower()
+unsubscriptions = {}
 
-if list_slug.startswith('announcements-') or list_slug == 'announcements':
-    unsub_func = unsub_global
-elif list_slug == 'beta':
-    unsub_func = unsub_beta
-else:
-    list_slug = '%%/{}'.format(list_slug)
-    unsub_func = unsub_project
-
-subscribers = list(map(lambda s: s.strip(), sys.stdin.readlines()))
+for input_line in input_lines:
+    try:
+        list_slug, subscriber = input_line.split(" ")
+    except ValueError:
+        continue
+    unsubscriptions.setdefault(list_slug, set()).add(subscriber)
 
 try:
-    if subscribers and list_slug:
-        print("Unsubscribing from list {}".format(list_slug))
-        unsub_func(subscribers, list_slug)
-        print("Unsubscribed {} matching users.".format(cur.rowcount))
+    for list_slug, subscribers in unsubscriptions.items():
+        subscribers = list(subscribers)
+        if (
+            list_slug.startswith('announcements-')
+            or list_slug == 'announcements'
+        ):
+            unsub_func = unsub_global
+        elif list_slug == 'beta':
+            unsub_func = unsub_beta
+        else:
+            list_slug = '%%/{}'.format(list_slug)
+            unsub_func = unsub_project
+
+        if subscribers and list_slug:
+            print("Unsubscribing from list {}".format(list_slug))
+            unsub_func(subscribers, list_slug)
+            print("\tUnsubscribed {} of {} matching users.".format(
+                cur.rowcount,
+                len(subscribers),
+            ))
 finally:
     cur.close()
     conn.close()
