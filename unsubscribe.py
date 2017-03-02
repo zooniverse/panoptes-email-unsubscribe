@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import sys
 
 import psycopg2
@@ -9,11 +10,14 @@ import yaml
 with open('/database.yml') as db_yaml:
     db_credentials = yaml.load(db_yaml)
 
-prod = db_credentials['staging']
+
+db = db_credentials[os.environ.get('PANOPTES_ENV', 'production')]
 
 conn = psycopg2.connect(
-    host=prod['host'], user=prod['username'], password=prod['password'],
-    dbname=prod['database']
+    host=db['host'],
+    user=db['username'],
+    password=db['password'],
+    dbname=db['database'],
 )
 cur = conn.cursor()
 
