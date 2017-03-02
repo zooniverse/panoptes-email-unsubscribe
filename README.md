@@ -1,7 +1,7 @@
 # panoptes-email-unsubscribe
 
 Unsubscribes users from Panoptes email lists. Takes input from stdin, one
-unsubcription at a time in the format:
+unsubcription per line, in the format:
 
 ```
 list-slug email-address
