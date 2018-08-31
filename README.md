@@ -25,5 +25,5 @@ echo """
 """ | \
     docker run -i --rm \
         -v /path/to/database.yml:/database.yml \
-        zoniverse/panoptes-email-unsubscribe
+        zooniverse/panoptes-email-unsubscribe
 ```
